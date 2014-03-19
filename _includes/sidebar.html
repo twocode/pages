@@ -52,11 +52,16 @@
 				<i class="fa fa-linkedin fa-lg"></i>
 			</a>
 		</li>
-		{% endif %}
+        {% endif %}
+        {% if site.author.weibo %}
 		<li>
-			<a class="btn btn-default btn-sm" href="{{ site.BASE_PATH }}/{{ site.rss_path }}">
-				<i class="fa fa-rss fa-lg"></i>
+			<a class="btn btn-default btn-sm" href="https://weibo.com/{{ site.author.weibo }}">
+				<i class="fa fa-weibo fa-lg"></i>
 			</a>
+		</li>
+		{% endif %}
+
+		<li>
 		</li>
 	</ul>
 </div>
