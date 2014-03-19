@@ -4,10 +4,6 @@ title : Projects
 theme :
 ---
 
-<div class="quote-description">
-	I began to research into the amazing world of technology after I entered college. My major was communication engineering, covering broad fields of knowledge, including computer science related courses like computer network, programming, operating systems, and electrical engineering courses like digital/analog circuits, microcomputers. I was keen on academic projects in labs, and I spent a great lot of time there, working with graduates and seniors. I also spent much time on internships. The experiences made it easy for me to find jobs. But the major driving force was my enthusiasm in technology. I have put some of my works on <a href="https://github.com/dsposito" target="_blank">GitHub</a>.
-</div>
-
 --------------------------------------------------------------------------------------------
 
 ##### ☞  Wind Speed/Direction Analysis Tool with Fourier/Kalman Filtering and Vector Analysis
