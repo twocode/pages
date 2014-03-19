@@ -21,8 +21,8 @@ tags_path: tags.html
 projects_path: projects.html
 about_path: about.html
 
-BASE_PATH: http://memoryleak.ml
-ASSET_PATH: http://memoryleak.ml/assets
+#BASE_PATH: false
+ASSET_PATH: /assets
 
 # All links will be namespaced by BASE_PATH if defined.
 # Links in your website should always be prefixed with {{ site.BASE_PATH }}

@@ -4,9 +4,8 @@ title : Projects
 theme :
 ---
 
---------------------------------------------------------------------------------------------
 
-##### ☞  Wind Speed/Direction Analysis Tool with Fourier/Kalman Filtering and Vector Analysis
+#### ☞  Wind Speed/Direction Analysis Tool with Fourier/Kalman Filtering and Vector Analysis
 
 *Sep. 2011 ~ May. 2012, Fudan University*
 
@@ -35,7 +34,7 @@ For detailed reference, please read: [Wind Speed/Direction Analysis Tool with Fo
 
 --------------------------------------------------------------------------------------------
 
-##### ☞  I.O.T Application System Based on CC430 at 433MHz
+#### ☞  I.O.T Application System Based on CC430 at 433MHz
 
 *Dec. 2010 ~ May. 2011, Fudan University*
 
@@ -44,5 +43,3 @@ The project is a prototype system for I.O.T applications. The project is suppose
 We designed and implemented our own networking protocal for communication between CC430 transceivers, Crop Growth Models, UI interface, database, etc. 
 
 For detailed reference, please read: [IOT Application System with Crop Growth Models in Facility Agriculture](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6316590&searchWithin%3Dp_Authors%3A.QT.Xiangyu+Hu.QT.)
-
---------------------------------------------------------------------------------------------
