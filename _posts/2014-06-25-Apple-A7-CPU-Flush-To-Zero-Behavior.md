@@ -9,7 +9,7 @@ description: "According to ARMv8 manual, when FZ (Flush-to-Zeto) bit in FPCR reg
 
 ---
 
-According to ARMv8 manual, when FZ (Flush-to-Zeto) bit in FPCR register iset, the floating-point value will be flushed to zero. Apple A7, however, seems to fail such rule. The situation was observed on **FRECPE** scalar instructions.
+According to ARMv8 manual, when FZ (Flush-to-Zeto) bit in FPCR register is set, the floating-point value will be flushed to zero. Apple A7, however, seems to fail such rule. The situation was observed on **FRECPE** scalar instructions.
 
 Taking **FRECPE** as the example - `frecpe d5, d24`, where:
 
@@ -50,7 +50,7 @@ The value `0x4008a8919f545aa0` falls into the condition above and will have `d5`
 
     [FPUSTATE]FPCR: 05800000
 
-This code logic is implemented in the `HELPER.c` as:
+QEMU implemented such rule in the `HELPER.c` as:
 
     float64 HELPER(recpe_f64)(float64 input, void *fpstp)
     {
@@ -80,7 +80,7 @@ This code logic is implemented in the `HELPER.c` as:
                             r64_frac);
     }
 
-Recompile and use gdb to set a breakpoint in the `else if` condigtion logic above, not only can we make sure that the value fell into this condition, but we could also watch the values:
+Recompile QEMU with `-g` option and use gdb to set a breakpoint in the `else if` condigtion logic above, not only can we make sure that the value fell into this condition, but we could also watch the values:
 
     ------------------------------------------
        lqq/home/xiangyuh/ubt/Houdini/trunk/dev-tools/qemu-aarch64-cosim/qemu-aarch64/target-arm
@@ -129,7 +129,7 @@ Recompile and use gdb to set a breakpoint in the `else if` condigtion logic abov
     $3 = 1024
     (gdb)
 
-`fpst` is the pointer to FPCR register emulated in QEMU and `flush_to_zero` flag was set. `exp` referred to the `exp` fields specified in IEEE754 and it was 1024 which led the work flow into the `flush_to_zero` condition block. *The whole process was no problem.*
+`fpst` is the pointer to FPCR register emulated in QEMU and `flush_to_zero` flag was set. `exp` referred to the `exp` fields specified in IEEE754 and it was 1024 which led the work flow into the `flush_to_zero` condition block. ***The whole process was no problem.***
 
 However, the same code ran on A7 produced different results. 
 
