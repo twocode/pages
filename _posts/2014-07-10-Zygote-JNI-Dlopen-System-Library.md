@@ -5,7 +5,7 @@ layout: post
 category: projects
 comments: true
 tags: Android jni runtime dlopen zygote
-description: "After Android has been initiated, Zygote will be running with system libraries loaded, most of which reside in /system/lib. When applications try to load libraries with the same library name, no matter through System.loadLibrary("<name>") or using dlopen() within JNI, the library will be ignored by Android linker and returns the handler of the previous loaded library in solist."
+description: "After Android has been initiated, Zygote will be running with system libraries loaded, most of which reside in /system/lib. When applications try to load libraries with the same library name, no matter through System.loadLibrary() or using dlopen() within JNI, the library will be ignored by Android linker and returns the handler of the previous loaded library in solist."
 
 ---
 
