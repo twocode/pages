@@ -16,7 +16,7 @@ In my senario, I would want the app to run in the background with a timer-trigge
 
 As an introdution 101, iOS provides `CLLocationManager` class for location tracking services and `CLLocationManagerDelegate` protocal for data-retrieving callbacks. Namely, implementing `-locationManager:didUpdateLocations:` protocal function will enable the delegate class to get the location values. This function is called everytime location gets updated, so it is very sensitive and gets called frequently. 
 
-Another feature iOS provides for background related feasibilities is `UIBackgroundTaskIdentifier`. This like a pid in linux representing processes which functions as the descriptor to a background task. Actually, the identifier is defined as:
+Another feature iOS provides for background related feasibilities is `UIBackgroundTaskIdentifier`. It is like a pid in linux representing processes, functioning as the descriptor to a background task. Actually, the identifier is defined as:
 
     typedef unsigned long UIBackgroundTaskIdentifier;
 
@@ -27,7 +27,7 @@ Normally, a background task is added in this way:
                     bgTask = UIBackgroundTaskInvalid;
                 }];
 
-After one background task has been initialized, the app will be offered extra several (3) minutes to run in the background. It should be noted that **1. If the app occupys the resources and battery for background tasks which runs for nothing, the app will not be permitted to be on the App Store; 2. If `bgTask` is never called by `endBackgroundTask`, the app will be terminated by the kernel.** 
+After one background task has begun, the app will be entitled extra several (3) minutes to run in the background. It should be noted that **1. If the app occupys the resources and battery for background tasks which runs for nothing, the app will not be permitted to be on the App Store; 2. If `bgTask` is never called by `endBackgroundTask`, the app will be terminated by the kernel.** 
 
 Last and most, we need `NSTimer` to combine the features above to enable the timer-triggered location tracking function in the background.
 
