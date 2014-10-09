@@ -99,6 +99,7 @@ Now we can add the addresses and register values to the stack-frame graph above:
 
 
 <br />
+
 #####Buffer overflow
 
 The basic trick here is to modify the lr value on the stack of getbuf() to point to an address that by-pass the operation that sets r0, the return value of getbuf(), which is `1`, to `[fp - 0x4]` position of test() that is used to set r1 as the second parameter to `printf(format, ...)`. In order to change the lr value, we need to override it in a provided way. That is the **buffer overflow** we talking about here. `buf[12]` was defined and passed to getxs() with only the starter pointer without its length, which is unknow to the callee function. While there is no restriction of `*sp++`, it won't be long before the `*sp` reaches the fp pointer and modify its value.
@@ -106,6 +107,7 @@ The basic trick here is to modify the lr value on the stack of getbuf() to point
 [![stack-frame3.jpg]({{BASE_PATH}}/images/csapp/stack-frame3.jpg)]({{BASE_PATH}}/images/csapp/stack-frame3.jpg)
 
 <br />
+
 #####Result
 
 Obviously, the input value could be:
