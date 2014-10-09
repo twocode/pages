@@ -18,7 +18,8 @@ As an introdution 101, iOS provides `CLLocationManager` class for location track
 
 Another feature iOS provides for background related feasibilities is `UIBackgroundTaskIdentifier`. It is like a pid in linux representing processes, functioning as the descriptor to a background task. Actually, the identifier is defined as:
 
-    typedef unsigned long UIBackgroundTaskIdentifier;
+    typedef unsigned int NSUInteger;
+    typedef NSUInteger UIBackgroundTaskIdentifier;
 
 Normally, a background task is added in this way:
 
