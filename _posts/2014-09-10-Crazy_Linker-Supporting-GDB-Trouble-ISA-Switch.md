@@ -15,7 +15,29 @@ Crazy_linker is more powerful than system linker in some ways to make dynamic li
 
 Usually, when an Android binary translator runs the ARM-compiled native APP on x86, it needs to recognize/records the APIs that needs to be mapped or translated to x86 instructions. Otherwise, the APP will run into an ARM instruction that wil definitedly crash on the x86 platform. However, it is also possible that the APP run into x86 address space from ARM address space when the ARM context is being translated, and this will cause the next x86 instructions to be continued being translated, causing the APP crashing.
 
-Example codes will be updated tomorrow.
+Crazy_linker provides GDB debugging for user libraries. It uses its DT_DEBUG entry in dynamic sections of /system/bin/app_process executable, and retrieves its function pointer of d_ptr:
+
+    //dynamic section definition:
+    typedef struct {
+            Elf32_Sword    d_tag;
+            union {
+                   Elf32_Word     d_val;
+                   Elf32_Addr     d_ptr;
+            } d_un;
+    } Elf32_Dyn;
+    
+    //crazy_linker makes use of DT_DEBUG section
+    if (dynamic_section->d_tag == DT_DEBUG) {
+    …
+    r_debug_ = reinterpret_cast<r_debug*>(dyn_section->d_un.d_ptr);
+    …
+    }
+    
+    //Later, it calls its member function pointer
+    r_debug_ -> r_brk();
+
+r_brk is an x86 function because app_process binary is x86. API mapping can not be hooked and mapped and APP crashes from ARM space to x86 space.
+
 
 <br />
 
