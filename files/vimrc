@@ -1,0 +1,71 @@
+set expandtab
+set shiftwidth=4 
+set tabstop=4
+set softtabstop=4
+set nobackup
+set cindent
+set autoindent
+set showcmd
+set helplang=Cn
+set nofoldenable
+set noswapfile
+set number
+set mouse=nv
+set hlsearch
+set incsearch
+set viminfo+=h
+set nocp
+filetype plugin on
+
+nmap <F5> ^W_^W\|
+nmap <F6> ^W=
+imap <F5> <ESC>^W_^W\|a
+imap <F6> <ESC>^W=a
+nmap gF ^Wf
+
+colorscheme desert
+"colorscheme torte
+syntax on
+
+hi Normal ctermfg=grey ctermbg=black 
+hi Visual ctermfg=green ctermbg=black
+hi Search term=reverse cterm=standout ctermfg=green  ctermbg=yellow
+hi IncSearch term=reverse cterm=standout ctermfg=green ctermbg=yellow
+hi PmenuSel ctermbg=Green ctermfg=Yellow
+
+let g:tagbar_type_objc = {
+\ 'ctagstype': 'objc'
+\, 'ctagsargs': [
+\ '--options='.expand('~/.vim/tags/ctags-options-objc-tagbar')
+\, '--objc-kinds=-N'
+\, '--format=2'
+\, '--excmd=pattern'
+\, '--extra='
+\, '--fields=nksaSmte'
+\, '-f -'
+\]
+\, 'kinds': [
+\ 'i:class interface'
+\, 'x:class extension'
+\, 'I:class implementation'
+\, 'P:protocol'
+\, 'M:method'
+\, 't:typedef'
+\, 'v:variable'
+\, 'p:property'
+\, 'e:enumeration'
+\, 'f:function'
+\, 'd:macro'
+\, 'g:pragma'
+\, 'c:constant'
+\, ]
+\, 'sro': ' '
+\}
+
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal g'\"" | endif
+endif
