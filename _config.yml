@@ -3,7 +3,7 @@
 paginate: 10 # pagination based on number of posts
 paginate_path: "page:num"
 exclude: ["README.md"] # files to exclude
-highlighter: true
+pygments: true
 markdown: kramdown
 title: Xiangyu Hu
 description: Personal website
@@ -28,6 +28,10 @@ BASE_PATH:
 
 gems:
     - jekyll-sitemap
+
+markdown: redcarpet
+redcarpet:
+    extensions: ["fenced_code_blocks", "autolink", "tables", "strikethrough"]
 
 # All links will be namespaced by BASE_PATH if defined.
 # Links in your website should always be prefixed with {{ site.BASE_PATH }}
