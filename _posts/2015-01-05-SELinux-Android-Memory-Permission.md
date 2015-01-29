@@ -15,7 +15,7 @@ Within a JNI applied program, a piece of memory if dynamically applied, it will 
 
 First, we start with **malloc** which gets us the heap memory.
 
-    ```c
+    ```C
     JNINativeMethod methods1[] = {
         { "dynamicRegisteredNative", "()I", NULL },
     };
