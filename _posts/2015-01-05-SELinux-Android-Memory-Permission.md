@@ -15,18 +15,18 @@ Within a JNI applied program, a piece of memory if dynamically applied, it will 
 
 First, we start with **malloc** which gets us the heap memory.
 
-    ```C
-    JNINativeMethod methods1[] = {
-        { "dynamicRegisteredNative", "()I", NULL },
-    };
-    ...
-    func_jitted = (FunctionPointer)malloc(24);
-    memcpy(func_jitted, TargetFunctionPointer, 24);
-    methods1[0].fnPtr = (void *)func_jitted;
-    if (mprotect((char*)(((uint64_t)func_jitted) & ~(PAGESIZE-1)), PAGESIZE, PROT_EXEC | PROT_READ | PROT_WRITE) < 0) {
-        printf("mprotect: %d\n", func_jitted, errno);
-    }
-    ```
+```C
+JNINativeMethod methods1[] = {
+    { "dynamicRegisteredNative", "()I", NULL },
+};
+...
+func_jitted = (FunctionPointer)malloc(24);
+memcpy(func_jitted, TargetFunctionPointer, 24);
+methods1[0].fnPtr = (void *)func_jitted;
+if (mprotect((char*)(((uint64_t)func_jitted) & ~(PAGESIZE-1)), PAGESIZE, PROT_EXEC | PROT_READ | PROT_WRITE) < 0) {
+    printf("mprotect: %d\n", func_jitted, errno);
+}
+```
 
 The logic is quite straightforward: applying 24 Bytes memory on heap, filling up its content, and register its label to JNI native function table. The magic number 24 in code means there were 6 assemblly instruction from `TargetFunctionPointer` (each instruction 4 Bytes, 6 in total). 
 
