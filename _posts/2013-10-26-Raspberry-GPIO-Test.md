@@ -32,24 +32,26 @@ There is one C library for BCM2835 which is compatible with BCM2708. Only with t
 
 so I have to make a set of definitions:
 
-	#define PINP0 RPI_V2_GPIO_P1_11
-	#define PINP1 RPI_V2_GPIO_P1_12
-	#define PINP2 RPI_V2_GPIO_P1_13
-	#define PINP3 RPI_V2_GPIO_P1_15
-	#define PINP4 RPI_V2_GPIO_P1_16
-	#define PINP5 RPI_V2_GPIO_P1_18
-	#define PINP6 RPI_V2_GPIO_P1_22
-	#define PINP7 RPI_V2_GPIO_P1_07
-	#define PINPGND RPI_V2_GPIO_P1_06
-	#define PINCE1 RPI_V2_GPIO_P1_26
-	#define PINCE0 RPI_V2_GPIO_P1_24
-	#define PINSCLK RPI_V2_GPIO_P1_23
-	#define PINMISO RPI_V2_GPIO_P1_21
-	#define PINMOSI RPI_V2_GPIO_P1_19
-	#define PINRXD RPI_V2_GPIO_P1_10
-	#define PINTXD RPI_V2_GPIO_P1_08
-	#define PINSCL RPI_V2_GPIO_P1_05
-	#define PINSDA RPI_V2_GPIO_P1_03
+```c
+#define PINP0 RPI_V2_GPIO_P1_11
+#define PINP1 RPI_V2_GPIO_P1_12
+#define PINP2 RPI_V2_GPIO_P1_13
+#define PINP3 RPI_V2_GPIO_P1_15
+#define PINP4 RPI_V2_GPIO_P1_16
+#define PINP5 RPI_V2_GPIO_P1_18
+#define PINP6 RPI_V2_GPIO_P1_22
+#define PINP7 RPI_V2_GPIO_P1_07
+#define PINPGND RPI_V2_GPIO_P1_06
+#define PINCE1 RPI_V2_GPIO_P1_26
+#define PINCE0 RPI_V2_GPIO_P1_24
+#define PINSCLK RPI_V2_GPIO_P1_23
+#define PINMISO RPI_V2_GPIO_P1_21
+#define PINMOSI RPI_V2_GPIO_P1_19
+#define PINRXD RPI_V2_GPIO_P1_10
+#define PINTXD RPI_V2_GPIO_P1_08
+#define PINSCL RPI_V2_GPIO_P1_05
+#define PINSDA RPI_V2_GPIO_P1_03
+```
 
 based on this BCM Pins - Header table:
 
@@ -57,61 +59,63 @@ based on this BCM Pins - Header table:
 
 With the APIs provided, the lights could blink with a frequency of every 500ms. Test code is:
 
-	#include <bcm2835.h>
-	
-	#include "rpi_defs.h"
-	
-	int main(int argc, char **argv)
-	{
-	    if (!bcm2835_init())
-	        return 1;
-	    bcm2835_gpio_fsel(PINP0, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP1, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP2, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP3, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP4, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP5, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP6, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINP7, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINCE1, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINCE0, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINSCLK, BCM2835_GPIO_FSEL_OUTP);
-	    bcm2835_gpio_fsel(PINMISO, BCM2835_GPIO_FSEL_OUTP);
-	    // Blink
-	    while (1)
-	    {
-	        bcm2835_gpio_write(PINP0, HIGH);
-	        bcm2835_gpio_write(PINP1, HIGH);
-	        bcm2835_gpio_write(PINP2, HIGH);
-	        bcm2835_gpio_write(PINP3, HIGH);
-	        bcm2835_gpio_write(PINP4, HIGH);
-	        bcm2835_gpio_write(PINP5, HIGH);
-	        bcm2835_gpio_write(PINP6, HIGH);
-	        bcm2835_gpio_write(PINP7, HIGH);
-	        bcm2835_gpio_write(PINCE1, HIGH);
-	        bcm2835_gpio_write(PINCE0, HIGH);
-	        bcm2835_gpio_write(PINSCLK, HIGH);
-	        bcm2835_gpio_write(PINMISO, HIGH);
-	        
-	        bcm2835_delay(500);
-	        
-	        bcm2835_gpio_write(PINP0, LOW);
-	        bcm2835_gpio_write(PINP1, LOW);
-	        bcm2835_gpio_write(PINP2, LOW);
-	        bcm2835_gpio_write(PINP3, LOW);
-	        bcm2835_gpio_write(PINP4, LOW);
-	        bcm2835_gpio_write(PINP5, LOW);
-	        bcm2835_gpio_write(PINP6, LOW);
-	        bcm2835_gpio_write(PINP7, LOW);
-	        bcm2835_gpio_write(PINCE1, LOW);
-	        bcm2835_gpio_write(PINCE0, LOW);
-	        bcm2835_gpio_write(PINSCLK, LOW);
-	        bcm2835_gpio_write(PINMISO, LOW);
-	        bcm2835_delay(500);
-	        
-	    }
-	    bcm2835_close();
-	    return 0;
-	}
+```c
+#include <bcm2835.h>
+
+#include "rpi_defs.h"
+
+int main(int argc, char **argv)
+{
+    if (!bcm2835_init())
+        return 1;
+    bcm2835_gpio_fsel(PINP0, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP1, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP2, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP3, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP4, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP5, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP6, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINP7, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINCE1, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINCE0, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINSCLK, BCM2835_GPIO_FSEL_OUTP);
+    bcm2835_gpio_fsel(PINMISO, BCM2835_GPIO_FSEL_OUTP);
+    // Blink
+    while (1)
+    {
+        bcm2835_gpio_write(PINP0, HIGH);
+        bcm2835_gpio_write(PINP1, HIGH);
+        bcm2835_gpio_write(PINP2, HIGH);
+        bcm2835_gpio_write(PINP3, HIGH);
+        bcm2835_gpio_write(PINP4, HIGH);
+        bcm2835_gpio_write(PINP5, HIGH);
+        bcm2835_gpio_write(PINP6, HIGH);
+        bcm2835_gpio_write(PINP7, HIGH);
+        bcm2835_gpio_write(PINCE1, HIGH);
+        bcm2835_gpio_write(PINCE0, HIGH);
+        bcm2835_gpio_write(PINSCLK, HIGH);
+        bcm2835_gpio_write(PINMISO, HIGH);
+        
+        bcm2835_delay(500);
+        
+        bcm2835_gpio_write(PINP0, LOW);
+        bcm2835_gpio_write(PINP1, LOW);
+        bcm2835_gpio_write(PINP2, LOW);
+        bcm2835_gpio_write(PINP3, LOW);
+        bcm2835_gpio_write(PINP4, LOW);
+        bcm2835_gpio_write(PINP5, LOW);
+        bcm2835_gpio_write(PINP6, LOW);
+        bcm2835_gpio_write(PINP7, LOW);
+        bcm2835_gpio_write(PINCE1, LOW);
+        bcm2835_gpio_write(PINCE0, LOW);
+        bcm2835_gpio_write(PINSCLK, LOW);
+        bcm2835_gpio_write(PINMISO, LOW);
+        bcm2835_delay(500);
+        
+    }
+    bcm2835_close();
+    return 0;
+}
+```
 
 <br />

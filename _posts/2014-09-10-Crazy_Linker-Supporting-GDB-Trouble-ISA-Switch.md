@@ -17,24 +17,26 @@ Usually, when an Android binary translator runs the ARM-compiled native APP on x
 
 Crazy_linker provides GDB debugging for user libraries. It uses its DT_DEBUG entry in dynamic sections of /system/bin/app_process executable, and retrieves its function pointer of d_ptr:
 
-    //dynamic section definition:
-    typedef struct {
-            Elf32_Sword    d_tag;
-            union {
-                   Elf32_Word     d_val;
-                   Elf32_Addr     d_ptr;
-            } d_un;
-    } Elf32_Dyn;
-    
-    //crazy_linker makes use of DT_DEBUG section
-    if (dynamic_section->d_tag == DT_DEBUG) {
-    …
-    r_debug_ = reinterpret_cast<r_debug*>(dyn_section->d_un.d_ptr);
-    …
-    }
-    
-    //Later, it calls its member function pointer
-    r_debug_ -> r_brk();
+```c
+//dynamic section definition:
+typedef struct {
+        Elf32_Sword    d_tag;
+        union {
+               Elf32_Word     d_val;
+               Elf32_Addr     d_ptr;
+        } d_un;
+} Elf32_Dyn;
+
+//crazy_linker makes use of DT_DEBUG section
+if (dynamic_section->d_tag == DT_DEBUG) {
+…
+r_debug_ = reinterpret_cast<r_debug*>(dyn_section->d_un.d_ptr);
+…
+}
+
+//Later, it calls its member function pointer
+r_debug_ -> r_brk();
+```
 
 r_brk is an x86 function because app_process binary is x86. API mapping can not be hooked and mapped and APP crashes from ARM space to x86 space.
 

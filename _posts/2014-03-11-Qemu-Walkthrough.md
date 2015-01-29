@@ -33,40 +33,44 @@ Qemu stores translation blocks to caches for future reference, such that if the 
 
 After all the description above of Qemu mechanisms, finally we come to the spot where `msr` instruction is handled:
 
-    else if (get_bits(insn, 20, 12) == 0xd51) {
-        handle_msr(s, insn);
-        break;
-    }
+```c
+else if (get_bits(insn, 20, 12) == 0xd51) {
+    handle_msr(s, insn);
+    break;
+}
+```
 
 According to ARM V8 manual, there are many conditions with `msr` instruction which operates the `pstate` register and setting values of `nzcv` is merely one of them working at `EL0`. When `op0` is 3, `crn` is 4 and `op2` is 0, the instruction means writing values `[31:28]` of `Xd` to `nzcv`. So we need to get the 64 bit value of `Xd`, truncate it to 32 bits, shift right 28 bits, and store it to `pstate` value:
 
-    Index: target-arm/translate-a64.c
-    ===================================================================
-    --- target-arm/translate-a64.c  (revision 14129)
-    +++ target-arm/translate-a64.c  (revision 14130)
-    @@ -394,9 +394,15 @@
-         int crn = get_bits(insn, 12, 4);
-         int op2 = get_bits(insn, 5, 3);
-    
-    -    /* XXX what are these? */
-    -    if (op0 == 3 && op1 == 3 && op2 == 2 && !crm && crn == 13) {
-    -        tcg_gen_st_i64(cpu_reg(dest), cpu_env, offsetof(CPUARMState, sr.tpidr_el0));
-    +    /* Instructions for accessing special-purpose registers */
-    +    if (op0 == 3 && crn == 4 && op2 == 0) {
-    +        TCGv_i32 t2 = tcg_temp_new_i32();
-    +        tcg_gen_trunc_i64_i32(t2, cpu_reg(dest));
-    +        tcg_gen_shri_i32(t2, t2, 28);
-    +        tcg_gen_st_i64(t2, cpu_env, offsetof(CPUARMState, pstate));
-    +        tcg_temp_free_i32(t2);
-    +    } else if (op0 == 3 && op1 == 3 && op2 == 2 && !crm && crn == 13) {
-    +        tcg_gen_st32_i64(cpu_reg(dest), cpu_env, offsetof(CPUARMState, sr.tpidr_el0));
-         } else if (op0 == 3 && op1 == 3 && (op2 == 0 || op2 == 1) && crm == 4 && crn == 4) {
-             /* XXX this is wrong! */
-             tcg_gen_st32_i64(cpu_reg(dest), cpu_env,
-    @@ -405,6 +411,7 @@
-             fprintf(stderr, "MSR: %d %d %d %d %d\n", op0, op1, op2, crm, crn);
-             unallocated_encoding(s);
-         }
+```c
+Index: target-arm/translate-a64.c
+===================================================================
+--- target-arm/translate-a64.c  (revision 14129)
++++ target-arm/translate-a64.c  (revision 14130)
+@@ -394,9 +394,15 @@
+     int crn = get_bits(insn, 12, 4);
+     int op2 = get_bits(insn, 5, 3);
+
+-    /* XXX what are these? */
+-    if (op0 == 3 && op1 == 3 && op2 == 2 && !crm && crn == 13) {
+-        tcg_gen_st_i64(cpu_reg(dest), cpu_env, offsetof(CPUARMState, sr.tpidr_el0));
++    /* Instructions for accessing special-purpose registers */
++    if (op0 == 3 && crn == 4 && op2 == 0) {
++        TCGv_i32 t2 = tcg_temp_new_i32();
++        tcg_gen_trunc_i64_i32(t2, cpu_reg(dest));
++        tcg_gen_shri_i32(t2, t2, 28);
++        tcg_gen_st_i64(t2, cpu_env, offsetof(CPUARMState, pstate));
++        tcg_temp_free_i32(t2);
++    } else if (op0 == 3 && op1 == 3 && op2 == 2 && !crm && crn == 13) {
++        tcg_gen_st32_i64(cpu_reg(dest), cpu_env, offsetof(CPUARMState, sr.tpidr_el0));
+     } else if (op0 == 3 && op1 == 3 && (op2 == 0 || op2 == 1) && crm == 4 && crn == 4) {
+         /* XXX this is wrong! */
+         tcg_gen_st32_i64(cpu_reg(dest), cpu_env,
+@@ -405,6 +411,7 @@
+         fprintf(stderr, "MSR: %d %d %d %d %d\n", op0, op1, op2, crm, crn);
+         unallocated_encoding(s);
+     }
+```
 
 This patch will generate correct intermediate codes with the help of tcg. The code will then be translated into host code (x86) and ran. This will continue the walk through I described before untill it meets a branch instruction or supervisor call which marks the end of the blocks. 
 

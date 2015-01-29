@@ -18,15 +18,19 @@ As an introdution 101, iOS provides `CLLocationManager` class for location track
 
 Another feature iOS provides for background related feasibilities is `UIBackgroundTaskIdentifier`. It is like a pid in linux representing processes, functioning as the descriptor to a background task. Actually, the identifier is defined as:
 
-    typedef unsigned int NSUInteger;
-    typedef NSUInteger UIBackgroundTaskIdentifier;
+```objc
+typedef unsigned int NSUInteger;
+typedef NSUInteger UIBackgroundTaskIdentifier;
+```
 
 Normally, a background task is added in this way:
 
-    UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^ {
-                    [application endBackgroundTask: bgTask];
-                    bgTask = UIBackgroundTaskInvalid;
-                }];
+```objc
+UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^ {
+                [application endBackgroundTask: bgTask];
+                bgTask = UIBackgroundTaskInvalid;
+            }];
+```
 
 After one background task has begun, the app will be entitled extra several (3) minutes to run in the background. It should be noted that **1. If the app occupys the resources and battery for background tasks which runs for nothing, the app will not be permitted to be distributed on the App Store; 2. If `bgTask` is never called by `endBackgroundTask`, the app will be terminated by the kernel.** 
 
