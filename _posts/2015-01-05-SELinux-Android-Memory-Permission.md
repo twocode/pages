@@ -15,6 +15,7 @@ Within a JNI applied program, a piece of memory if dynamically applied, it will 
 
 First, we start with **malloc** which gets us the heap memory.
 
+    ```c
     JNINativeMethod methods1[] = {
         { "dynamicRegisteredNative", "()I", NULL },
     };
@@ -25,6 +26,7 @@ First, we start with **malloc** which gets us the heap memory.
     if (mprotect((char*)(((uint64_t)func_jitted) & ~(PAGESIZE-1)), PAGESIZE, PROT_EXEC | PROT_READ | PROT_WRITE) < 0) {
         printf("mprotect: %d\n", func_jitted, errno);
     }
+    ```
 
 The logic is quite straightforward: applying 24 Bytes memory on heap, filling up its content, and register its label to JNI native function table. The magic number 24 in code means there were 6 assemblly instruction from `TargetFunctionPointer` (each instruction 4 Bytes, 6 in total). 
 
@@ -32,18 +34,22 @@ How ever, the JIT-ed code could not be executed. The reason from logcat was `...
 
 Now we try enabling the same logic on **stack** with local variables. Neglecting the fact that even permission is granted, the code will not be retrieved as the stack will be gone in the fly.
 
+    ```c
     uint32_t code[256];
     func_jitted = (FunctionPointer)code;
+    ```
     
 Not surprisely, the logcat shows `.../* avc: denied { execstack } */...` error.
 
 Trying to use **zero page mmap** to set the `PROT_EXEC` at the first beginning.
 
+    ```c
     if ((func_jitted = (FunctionPointer)mmap(NULL, 
             PAGESIZE, PROT_WRITE | PROT_READ | PROT_EXEC,
             MAP_SHARED, open("/dev/zero", O_RDWR), 0)) == MAP_FAILED) {
         printf("func_jitted: %p, mmap: %d\n", func_jitted, errno);
     }
+    ```
 
 Even though the `mmap()` function allows to pass in a *PROT_EXEC* property, the logcat still shows `.../* avc: denied { execute } for path="/dev/zero" */...`, denying our accesses to the memory page.
 
@@ -51,11 +57,13 @@ It should be noted that all the above attempts still cannot work with `setenforc
 
 The last effort would be using the **anonymous page**, and this time, it finally worked.
 
+    ```c
     if ((func_jitted = (FunctionPointer)mmap(NULL, 
             24, PROT_WRITE | PROT_READ | PROT_EXEC,
             MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)) == MAP_FAILED) {
         printf("mmap: %d\n", func_jitted, errno);
     }
+    ```
 
 Do not forget to specify `MAP_PRIVATE` of `MAP_SHARED` with `MAP_ANONYMOUS` and the `fd` parameter is recommended, and required on some system, to be -1 when tring to apply for an anonymous page.
 
