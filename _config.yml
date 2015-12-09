@@ -18,8 +18,6 @@ author:
   twitter: bssoverflow
 
 tags_path: tags.html
-projects_path: projects.html
-about_path: about.html
 
 ASSET_PATH: /assets
 
